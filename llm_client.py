@@ -33,9 +33,11 @@ UNDERSTAND_QUERY_PROMPT = """You are a query understanding system that interpret
                         "type": "array",
                         "items": {{"type": "string"}},
                         "description": (
-                            "NAICS prefixes for a literal industry match. Use the SHORTEST "
-                            "prefix you are confident about -- prefer a 2-digit sector code "
-                            "over guessing a longer, more specific code from memory. "
+                            "Use the MOST SPECIFIC NAICS prefix you can confidently identify for this industry. "
+                            "Prefferably >=3. Only fall back to a 2-digit sector code if you genuinely cannot determine a more "
+                            "specific one -- do not default to broad as a safe choice when the industry is "
+                            "clearly identifiable (e.g. "automobile companies" -> use the automobile "
+                            "manufacturing code, not the general manufacturing sector). "
                             "Reference table:\\n"
                             "11 Agriculture/Forestry/Fishing, 21 Mining/Oil/Gas, 22 Utilities, "
                             "23 Construction, 31-33 Manufacturing, 42 Wholesale Trade, "
@@ -96,9 +98,9 @@ Companies:
 {companies_json}"""
 
 REGION_GROUPS = {
-    "scandinavia": ["Sweden", "Norway", "Denmark"],
-    "nordics": ["Sweden", "Norway", "Denmark", "Finland", "Iceland"],
-    "europe": [
+    "Scandinavia": ["Sweden", "Norway", "Denmark"],
+    "Nordics": ["Sweden", "Norway", "Denmark", "Finland", "Iceland"],
+    "Europe": [
         "Austria", "Belgium", "Switzerland", "Germany", "Denmark", "Spain", "Finland", "France", "United Kingdom", "Greece", "Croatia",
         "Ireland", "Iceland", "Italy", "Latvia", "Luxembourg", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "Sweden",
         "Ukraine",
@@ -106,24 +108,6 @@ REGION_GROUPS = {
 }
 
 class LocalLLMClient:
-    """
-    Free local LLM client for query understanding (Stage 0) and batched
-    qualification (Stage 3).
-
-    Like LocalEmbeddingClient above, the model is downloaded once from
-    Hugging Face and then runs entirely locally -- no API key, no per-call
-    cost, no rate limits. The tradeoff: a small open model can't be forced
-    into a schema the way a hosted model's tool-use can, so this client
-    leans on strict prompting plus a string-aware JSON extractor and a
-    couple of retries, and degrades gracefully instead of crashing the
-    pipeline if a response still can't be parsed.
-
-    Swap `model_name` for a larger instruct model if you have a GPU and want
-    more reliable JSON / better judgment quality, e.g. "Qwen/Qwen2.5-7B-Instruct"
-    or "meta-llama/Llama-3.1-8B-Instruct". The default is small enough to run
-    on CPU, at the cost of being less reliable on genuinely hard judgment calls.
-    """
-
     def __init__(
         self,
         model_name: str = "Qwen/Qwen2.5-7B-Instruct",
