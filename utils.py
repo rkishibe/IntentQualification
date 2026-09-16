@@ -15,6 +15,7 @@ import numpy as np
 import hashlib
 from pathlib import Path
 from data import Company, Verdict
+from prompts import REGION_GROUPS
 
 def normalize_nested(value): # address is both a JSON object and a Python repr string, this function normalizes the data
     if value is None:
@@ -97,16 +98,46 @@ def get_country(address):
 
     return None
 
-# ---------------------------------------------------------------------------
-# Loading companies from the dataset
-#
-#     df = pd.read_json("data/companies.jsonl", lines=True)
-#     companies = companies_from_dataframe(df)
-#
-# Robust to missing columns, NaN cells (pandas' native representation of a
-# missing JSON field), and fields that arrive as plain strings instead of
-# lists/dicts -- real company datasets are inconsistent about all of this.
-# ---------------------------------------------------------------------------
+def expand_country_regions(filters: dict) -> dict:
+    """Expand region names in the country filter into country names."""
+    if not isinstance(filters, dict):
+        return {}
+
+    if "country" not in filters:
+        return filters
+
+    targets = filters["country"]
+
+    if isinstance(targets, str):
+        targets = [targets]
+
+    if not isinstance(targets, list):
+        return filters
+
+    expanded = []
+
+    # Case-insensitive lookup of REGION_GROUPS
+    region_lookup = {
+        region.strip().lower(): countries
+        for region, countries in REGION_GROUPS.items()
+    }
+
+    for target in targets:
+        target = str(target).strip()
+
+        # Is it a region?
+        region_countries = region_lookup.get(target.lower())
+
+        if region_countries is not None:
+            expanded.extend(region_countries)
+        else:
+            # It's already a country
+            expanded.append(target)
+
+    # Deduplicate while preserving order
+    filters["country"] = list(dict.fromkeys(expanded))
+
+    return filters
 
 def _is_na(val: Any) -> bool:
     if val is None:
@@ -303,3 +334,4 @@ def text_hash(text: str) -> str:
     return hashlib.sha256(
         text.encode("utf-8")
     ).hexdigest()
+
