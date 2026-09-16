@@ -1,0 +1,104 @@
+
+PRIMARY NAICS DISTRIBUTION
+  code                                                                                                              label  count   pct
+513210                                                                                                Software Publishers     67 14.05
+333611                                                              Turbine and Turbine Generator Set Units Manufacturing     44  9.22
+541512                                                                                   Computer Systems Design Services     30  6.29
+325412                                                                           Pharmaceutical Preparation Manufacturing     25  5.24
+335910                                                                                              Battery Manufacturing     24  5.03
+541330                                                                                               Engineering Services     22  4.61
+325180                                                                       Other Basic Inorganic Chemical Manufacturing     21  4.40
+522320                                           Financial Transactions Processing, Reserve, and Clearinghouse Activities     15  3.14
+335999                                           All Other Miscellaneous Electrical Equipment and Component Manufacturing     12  2.52
+541511                                                                               Custom Computer Programming Services     11  2.31
+312111                                                                                           Soft Drink Manufacturing     11  2.31
+334413                                                                     Semiconductor and Related Device Manufacturing     10  2.10
+541620                                                                                  Environmental Consulting Services      9  1.89
+326199                                                                           All Other Plastics Product Manufacturing      8  1.68
+236220                                                                 Commercial and Institutional Building Construction      7  1.47
+326160                                                                                      Plastics Bottle Manufacturing      7  1.47
+221115                                                                                     Wind Electric Power Generation      6  1.26
+541690                                                                 Other Scientific and Technical Consulting Services      6  1.26
+541611                                               Administrative Management and General Management Consulting Services      6  1.26
+237990                                                                     Other Heavy and Civil Engineering Construction      5  1.05
+522299                                 International, Secondary Market, and All Other Nondepository Credit Intermediation      5  1.05
+541715 Research and Development in the Physical, Engineering, and Life Sciences (except Nanotechnology and Biotechnology)      5  1.05
+332312                                                                          Fabricated Structural Metal Manufacturing      4  0.84
+312130                                                                                                           Wineries      4  0.84
+325414                                                               Biological Product (except Diagnostic) Manufacturing      4  0.84
+541612                                                                                Human Resources Consulting Services      3  0.63
+518210                             Computing Infrastructure Providers, Data Processing, Web Hosting, and Related Services      3  0.63
+333120                                                                               Construction Machinery Manufacturing      3  0.63
+333414                                                         Heating Equipment (except Warm Air Furnaces) Manufacturing      3  0.63
+311999                                                                         All Other Miscellaneous Food Manufacturing      3  0.63
+327213                                                                                      Glass Container Manufacturing      3  0.63
+311421                                                                                        Fruit and Vegetable Canning      3  0.63
+324110                                                                                               Petroleum Refineries      2  0.42
+424410                                                                          General Line Grocery Merchant Wholesalers      2  0.42
+424720                         Petroleum and Petroleum Products Merchant Wholesalers (except Bulk Stations and Terminals)      2  0.42
+237310                                                                           Highway, Street, and Bridge Construction      2  0.42
+238990                                                                              All Other Specialty Trade Contractors      2  0.42
+236117                                                                                      New Housing For-Sale Builders      2  0.42
+237130                                                   Power and Communication Line and Related Structures Construction      2  0.42
+541214                                                                                                   Payroll Services      2  0.42
+423690                                                          Other Electronic Parts and Equipment Merchant Wholesalers      2  0.42
+459110                                                                                           Sporting Goods Retailers      2  0.42
+445110                                            Supermarkets and Other Grocery Retailers (except Convenience Retailers)      2  0.42
+458110                                                                        Clothing and Clothing Accessories Retailers      2  0.42
+311920                                                                                       Coffee and Tea Manufacturing      2  0.42
+332913                                                                    Plumbing Fixture Fitting and Trim Manufacturing      2  0.42
+325620                                                                                   Toilet Preparation Manufacturing      2  0.42
+541618                                                                               Other Management Consulting Services      2  0.42
+541310                                                                                             Architectural Services      2  0.42
+325998                                             All Other Miscellaneous Chemical Product and Preparation Manufacturing      2  0.42
+325411                                                                              Medicinal and Botanical Manufacturing      2  0.42
+424690                                                            Other Chemical and Allied Products Merchant Wholesalers      1  0.21
+531210                                                                          Offices of Real Estate Agents and Brokers      1  0.21
+325311                                                                               Nitrogenous Fertilizer Manufacturing      1  0.21
+457120                                                                                            Other Gasoline Stations      1  0.21
+488210                                                                         Support Activities for Rail Transportation      1  0.21
+441110                                                                                                    New Car Dealers      1  0.21
+336110                                                              Automobile and Light Duty Motor Vehicle Manufacturing      1  0.21
+424210                                                                 Drugs and Druggists' Sundries Merchant Wholesalers      1  0.21
+488310                                                                                         Port and Harbor Operations      1  0.21
+311224                                                                               Soybean and Other Oilseed Processing      1  0.21
+211130                                                                                             Natural Gas Extraction      1  0.21
+221210                                                                                           Natural Gas Distribution      1  0.21
+491110                                                                                                     Postal Service      1  0.21
+311225                                                                                Fats and Oils Refining and Blending      1  0.21
+423840                                                                           Industrial Supplies Merchant Wholesalers      1  0.21
+493110                                                                                    General Warehousing and Storage      1  0.21
+333924                                            Industrial Truck, Tractor, Trailer, and Stacker Machinery Manufacturing      1  0.21
+326122                                                                       Plastics Pipe and Pipe Fitting Manufacturing      1  0.21
+312112                                                                                        Bottled Water Manufacturing      1  0.21
+238210                                                   Electrical Contractors and Other Wiring Installation Contractors      1  0.21
+333612                                                 Speed Changer, Industrial High-Speed Drive, and Gear Manufacturing      1  0.21
+335314                                                                         Relay and Industrial Control Manufacturing      1  0.21
+455211                                                                                   Warehouse Clubs and Supercenters      1  0.21
+334111                                                                                  Electronic Computer Manufacturing      1  0.21
+444110                                                                                                       Home Centers      1  0.21
+455110                                                                                                  Department Stores      1  0.21
+512250                                                                                 Record Production and Distribution      1  0.21
+325510                                                                                    Paint and Coating Manufacturing      1  0.21
+339999                                                                              All Other Miscellaneous Manufacturing      1  0.21
+315250                                                             Cut and Sew Apparel Manufacturing (except Contractors)      1  0.21
+322230                                                                                   Stationery Product Manufacturing      1  0.21
+813410                                                                                     Civic and Social Organizations      1  0.21
+333310                                                            Commercial and Service Industry Machinery Manufacturing      1  0.21
+424910                                                                                 Farm Supplies Merchant Wholesalers      1  0.21
+337910                                                                                             Mattress Manufacturing      1  0.21
+311340                                                                           Nonchocolate Confectionery Manufacturing      1  0.21
+336310                                                       Motor Vehicle Gasoline Engine and Engine Parts Manufacturing      1  0.21
+459120                                                                                     Hobby, Toy, and Game Retailers      1  0.21
+444140                                                                                                 Hardware Retailers      1  0.21
+322299                                                                    All Other Converted Paper Product Manufacturing      1  0.21
+322219                                                                           Other Paperboard Container Manufacturing      1  0.21
+221122                                                                                        Electric Power Distribution      1  0.21
+311422                                                                                                  Specialty Canning      1  0.21
+311612                                                                                      Meat Processed from Carcasses      1  0.21
+221114                                                                                    Solar Electric Power Generation      1  0.21
+332311                                                           Prefabricated Metal Building and Component Manufacturing      1  0.21
+423610                    Electrical Apparatus and Equipment, Wiring Supplies, and Related Equipment Merchant Wholesalers      1  0.21
+811310        Commercial and Industrial Machinery and Equipment (except Automotive and Electronic) Repair and Maintenance      1  0.21
+541714                                               Research and Development in Biotechnology (except Nanobiotechnology)      1  0.21
+325413                                                                        In-Vitro Diagnostic Substance Manufacturing      1  0.21
