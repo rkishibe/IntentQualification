@@ -335,3 +335,188 @@ def text_hash(text: str) -> str:
         text.encode("utf-8")
     ).hexdigest()
 
+SEARCH_RADII_KM = [25, 50, 100, 200, 400]
+
+
+def distance_km(lat1, lon1, lat2, lon2):
+    from math import radians, sin, cos, sqrt, atan2
+
+    R = 6371.0
+
+    lat1, lon1 = radians(lat1), radians(lon1)
+    lat2, lon2 = radians(lat2), radians(lon2)
+
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    a = (
+        sin(dlat / 2) ** 2
+        + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    )
+
+    return 2 * R * atan2(sqrt(a), sqrt(1 - a))
+
+def geo_filter(companies, latitude, longitude, radius_km):
+    results = []
+
+    for company in companies:
+        address = company.address or {}
+
+        lat = address.get("latitude")
+        lon = address.get("longitude")
+
+        if lat is None or lon is None:
+            continue
+
+        distance = distance_km(
+            latitude,
+            longitude,
+            float(lat),
+            float(lon),
+        )
+
+        if distance <= radius_km:
+            results.append((company, distance))
+
+    return results
+
+def progressive_geo_search(
+    companies,
+    latitude,
+    longitude,
+    min_results=20,
+):
+    for radius_km in SEARCH_RADII_KM:
+        results = geo_filter(
+            companies,
+            latitude,
+            longitude,
+            radius_km,
+        )
+
+        if len(results) >= min_results:
+            return results, radius_km
+
+    return results, SEARCH_RADII_KM[-1]
+
+def geo_penalty(distance_km: float | None) -> float:
+    if distance_km is None:
+        return 0.0
+
+    if distance_km <= 25:
+        return 0.0
+
+    if distance_km <= 50:
+        return 0.05
+
+    if distance_km <= 100:
+        return 0.15
+
+    if distance_km <= 200:
+        return 0.30
+
+    return 0.50
+
+
+def should_apply_naics_hard(
+    companies: list,
+    filters: dict,
+    min_candidates: int = 20,
+    min_survival_ratio: float = 0.05,
+) -> bool:
+    prefixes = filters.get("naics_prefixes")
+
+    if not prefixes:
+        return False
+
+    matched = 0
+    available = 0
+
+    for c in companies:
+        codes = _naics_codes(c)
+
+        if not codes:
+            continue
+
+        available += 1
+
+        if any(
+            code.startswith(prefix)
+            for code in codes
+            for prefix in prefixes
+        ):
+            matched += 1
+
+    if available == 0:
+        return False
+
+    survival_ratio = matched / available
+
+    return (
+        matched >= min_candidates
+        and survival_ratio >= min_survival_ratio
+    )
+
+def _naics_codes(company: Company) -> list:
+    codes = []
+    if company.primary_naics:
+        code = company.primary_naics.get("code")
+        if code:
+            codes.append(str(code))
+    if company.secondary_naics:
+        code = company.secondary_naics.get("code")
+        if code:
+            codes.append(str(code))
+    return codes
+
+def naics_filter_mode(
+    companies: list,
+    filters: dict,
+    min_candidates: int = 20,
+    min_survival_ratio: float = 0.05,
+) -> str:
+    """
+    Decide whether the NAICS filter should be hard, soft, or ignored
+    based on how many companies it matches.
+
+    Returns:
+        "hard"   -> safe enough to use as an exclusion filter
+        "soft"   -> use as a ranking signal, but don't exclude
+        "none"   -> too few/no matches; don't use it
+    """
+
+    prefixes = filters.get("naics_prefixes")
+
+    if not prefixes:
+        return "none"
+
+    total_with_naics = 0
+    matched = 0
+
+    for company in companies:
+        codes = _naics_codes(company)
+
+        if not codes:
+            continue
+
+        total_with_naics += 1
+
+        if any(
+            code.startswith(prefix)
+            for code in codes
+            for prefix in prefixes
+        ):
+            matched += 1
+
+    if total_with_naics == 0:
+        return "none"
+
+    survival_ratio = matched / total_with_naics
+
+    if matched >= min_candidates and survival_ratio >= min_survival_ratio:
+        return "hard"
+
+    if matched > 0:
+        return "soft"
+
+    return "none"

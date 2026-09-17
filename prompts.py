@@ -9,13 +9,15 @@ UNDERSTAND_QUERY_PROMPT = """You are a query understanding system that interpret
             "query_type": {{
                 "type": "string",
                 "enum": ["structured", "semantic", "hybrid", "ecosystem"],
-                "description": "'structured': fully answered by explicit filters (location, size, revenue, industry, public status). 'semantic': needs judgment beyond raw fields (e.g. 'fast-growing', 'competing with traditional banks'). 'ecosystem': needs reasoning about a company's role in a supply chain or business relationship not stated directly (e.g. 'could supply packaging for a cosmetics brand'). 'hybrid': has both a hard filter and a judgment component."
+                "description": "'structured': fully answered ONLY by explicit filters (location, size, revenue, public status). 'hybrid': has both a hard filter and a judgment component. 'semantic': needs judgment beyond raw fields (e.g. 'fast-growing', 'competing with traditional banks'). 'ecosystem': needs reasoning about a company's role in a supply chain or business relationship not stated directly (e.g. 'could supply packaging for a cosmetics brand')."
             }},
             "structured_filters": {{
                 "type": "object",
                 "description": "Only include keys the query actually constrains.",
                 "properties": {{
-                    "country": {{"type": "string"}},
+                    "country": {{"type": "string"}}, //For geographic queries, if the user specifies one of these region groups, put the region name itself in the `country` field: Scandinavia, Nordic, Europe, Asia. Do not try to expand the region into individual countries.
+                    "region": {{"type": "string"}},
+                    "city": {{"type": "string"}},
                     "employee_count_min": {{"type": "integer"}},
                     "employee_count_max": {{"type": "integer"}},
                     "revenue_min": {{"type": "number"}},
@@ -99,4 +101,5 @@ REGION_GROUPS = {
         "Ireland", "Iceland", "Italy", "Latvia", "Luxembourg", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "Sweden",
         "Ukraine",
     ],
+    "Asia" : ["China", "Japan", "South Korea"]
 }

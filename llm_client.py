@@ -3,7 +3,13 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 import re
 import json
 from utils import company_id, expand_country_regions
-from prompts import UNDERSTAND_QUERY_PROMPT, JUDGE_BATCH_PROMPT
+from prompts import UNDERSTAND_QUERY_PROMPT, JUDGE_BATCH_PROMPT, REGION_GROUPS
+
+REGION_ALIASES = {
+        "scandinavia": "Scandinavia",
+        "nordics": "Nordics",
+        "europe": "Europe",
+    }
 
 class LocalLLMClient:
     def __init__(
@@ -153,6 +159,17 @@ class LocalLLMClient:
         plan["structured_filters"] = expand_country_regions(
             plan["structured_filters"]
         )
+
+
+        filters = plan["structured_filters"]
+
+        # Force known geographic regions from the original query
+        query_lower = query.lower()
+
+        for alias, region in REGION_ALIASES.items():
+            if re.search(rf"\b{re.escape(alias)}\b", query_lower):
+                filters["country"] = REGION_GROUPS[region]
+                break
 
         return plan
 
