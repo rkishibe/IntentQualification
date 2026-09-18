@@ -246,7 +246,9 @@ class LocalLLMClient:
             f"{self.max_json_retries + 1} attempt(s). Last output: {last_raw!r}"
         )
 
-    # ---- Stage 0: query understanding ----------------------------------
+# ---------------------------------------------------------------------------
+# Stage 1: understand query
+# ---------------------------------------------------------------------------
 
     def understand_query(self, query: str) -> dict:
         prompt = UNDERSTAND_QUERY_PROMPT.format(query=query)

@@ -16,6 +16,59 @@ from llm_client import LocalLLMClient, REGION_ALIASES
 SEARCH_RADII_KM = [25, 50, 100, 200, 400]
 MIN_GEO_RESULTS = 20
 
+def load_embedding_index(output_dir: str = "data/embeddings") -> dict:
+    """company_id -> np.ndarray, loaded from the .npz written by build_embedding_dataset."""
+    vectors_path = os.path.join(output_dir, "embeddings.npz")
+    if not os.path.exists(vectors_path):
+        return {}
+    loaded = np.load(vectors_path, allow_pickle=False)
+    return {
+        str(cid): vec
+        for cid, vec in zip(loaded["company_ids"], loaded["embeddings"])
+    }
+
+def embedding_retrieve(
+    query: str,
+    plan: dict,
+    candidates: list,
+    embedding_index: dict,
+    embedding_client,
+    top_n: int = 50,
+) -> list:
+    """Returns [(company, score), ...] sorted descending, length <= top_n."""
+    if not candidates:
+        return []
+
+    query_texts = [query, plan.get("hypothetical_profile", "")] + plan.get("expansion_terms", [])[:8]
+    query_texts = [t for t in query_texts if t]
+    query_vecs = embedding_client.embed(query_texts)  # already normalized
+
+    scored = []
+    to_embed_live = []  # (index_in_scored_placeholder, company) needing on-the-fly embedding
+    for c in candidates:
+        cid = _cid({"website": c.website, "operational_name": c.operational_name})
+        vec = embedding_index.get(cid)
+        if vec is None:
+            to_embed_live.append(c)
+            continue
+        sims = query_vecs @ vec
+        score = 0.6 * sims.max() + 0.4 * sims.mean()
+        scored.append((c, float(score)))
+
+    if to_embed_live:
+        live_vecs = embedding_client.embed([c.composite_text() for c in to_embed_live])
+        for c, vec in zip(to_embed_live, live_vecs):
+            sims = query_vecs @ vec
+            score = 0.6 * sims.max() + 0.4 * sims.mean()
+            scored.append((c, float(score)))
+
+    scored.sort(key=lambda x: x[1], reverse=True)
+    return scored[:top_n]
+
+# ---------------------------------------------------------------------------
+# Stage 1: Structure filtering
+# ---------------------------------------------------------------------------
+
 def structured_filter(companies: list, filters: dict) -> list:
     """Returns [(company, low_confidence), ...] for companies that pass."""
     out = []
@@ -106,57 +159,6 @@ def structured_filter(companies: list, filters: dict) -> list:
         if ok:
             out.append((c, low_conf))
     return out
-
-
-def load_embedding_index(output_dir: str = "data/embeddings") -> dict:
-    """company_id -> np.ndarray, loaded from the .npz written by build_embedding_dataset."""
-    vectors_path = os.path.join(output_dir, "embeddings.npz")
-    if not os.path.exists(vectors_path):
-        return {}
-    loaded = np.load(vectors_path, allow_pickle=False)
-    return {
-        str(cid): vec
-        for cid, vec in zip(loaded["company_ids"], loaded["embeddings"])
-    }
-
-
-def embedding_retrieve(
-    query: str,
-    plan: dict,
-    candidates: list,
-    embedding_index: dict,
-    embedding_client,
-    top_n: int = 50,
-) -> list:
-    """Returns [(company, score), ...] sorted descending, length <= top_n."""
-    if not candidates:
-        return []
-
-    query_texts = [query, plan.get("hypothetical_profile", "")] + plan.get("expansion_terms", [])[:8]
-    query_texts = [t for t in query_texts if t]
-    query_vecs = embedding_client.embed(query_texts)  # already normalized
-
-    scored = []
-    to_embed_live = []  # (index_in_scored_placeholder, company) needing on-the-fly embedding
-    for c in candidates:
-        cid = company_id({"website": c.website, "operational_name": c.operational_name})
-        vec = embedding_index.get(cid)
-        if vec is None:
-            to_embed_live.append(c)
-            continue
-        sims = query_vecs @ vec
-        score = 0.6 * sims.max() + 0.4 * sims.mean()
-        scored.append((c, float(score)))
-
-    if to_embed_live:
-        live_vecs = embedding_client.embed([c.composite_text() for c in to_embed_live])
-        for c, vec in zip(to_embed_live, live_vecs):
-            sims = query_vecs @ vec
-            score = 0.6 * sims.max() + 0.4 * sims.mean()
-            scored.append((c, float(score)))
-
-    scored.sort(key=lambda x: x[1], reverse=True)
-    return scored[:top_n]
 
 
 # ---------------------------------------------------------------------------

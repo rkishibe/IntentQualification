@@ -15,7 +15,6 @@ import numpy as np
 import hashlib
 from pathlib import Path
 from data import Company, Verdict
-from prompts import REGION_GROUPS
 
 def normalize_nested(value): # address is both a JSON object and a Python repr string, this function normalizes the data
     if value is None:
