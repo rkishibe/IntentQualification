@@ -29,25 +29,35 @@ UNDERSTAND_QUERY_PROMPT = """You are a query understanding system that interpret
                         "type": "array",
                         "items": {{"type": "string"}},
                         "description": (
-                            "Use the MOST SPECIFIC NAICS prefix you can confidently identify for this industry. "
-                            "Prefferably >=3. Only fall back to a 2-digit sector code if you genuinely cannot determine a more "
-                            "specific one -- do not default to broad as a safe choice when the industry is "
-                            "clearly identifiable (e.g. "automobile companies" -> use the automobile "
-                            "manufacturing code, not the general manufacturing sector). "
-                            "Reference table:\\n"
-                            "11 Agriculture/Forestry/Fishing, 21 Mining/Oil/Gas, 22 Utilities, "
-                            "23 Construction, 31-33 Manufacturing, 42 Wholesale Trade, "
-                            "44-45 Retail Trade, 48-49 Transportation/Warehousing/Logistics, "
-                            "51 Information (software, IT, publishing), "
-                            "52 Finance/Insurance (fintech, banking), "
-                            "54 Professional/Scientific/Technical Services (consulting), "
-                            "61 Educational Services, 62 Health Care, "
-                            "3254 Pharmaceutical Manufacturing, "
-                            "71 Arts/Entertainment, 72 Accommodation/Food Services, "
-                            "81 Other Services.\\n"
-                            "Leave EMPTY for role/ecosystem queries where the matching company "
-                            "could plausibly be filed under an unrelated code -- rely on "
-                            "expansion_terms and hypothetical_profile instead."
+                            "11": "Agriculture, Forestry, Fishing and Hunting",
+                            "21": "Mining, Quarrying, and Oil and Gas Extraction",
+                            "22": "Utilities",
+                            "23": "Construction",
+
+                            "31": "Manufacturing",
+                            "32": "Manufacturing",
+                            "33": "Manufacturing",
+
+                            "42": "Wholesale Trade",
+
+                            "44": "Retail Trade",
+                            "45": "Retail Trade",
+
+                            "48": "Transportation and Warehousing",
+                            "49": "Transportation and Warehousing",
+
+                            "51": "Information",
+                            "52": "Finance and Insurance",
+                            "53": "Real Estate and Rental and Leasing",
+                            "54": "Professional, Scientific, and Technical Services",
+                            "55": "Management of Companies and Enterprises",
+                            "56": "Administrative and Support and Waste Management and Remediation Services",
+                            "61": "Educational Services",
+                            "62": "Health Care and Social Assistance",
+                            "71": "Arts, Entertainment, and Recreation",
+                            "72": "Accommodation and Food Services",
+                            "81": "Other Services (except Public Administration)",
+                            "92": "Public Administration",
                         ),
                     }},
                 }}

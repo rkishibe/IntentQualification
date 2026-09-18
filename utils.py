@@ -177,19 +177,6 @@ def _as_bool(val: Any) -> Optional[bool]:
         return val.strip().lower() in {"true", "yes", "1", "public", "y"}
     return bool(val)
 
-
-def _as_dict(val: Any) -> Optional[dict]:
-    """For primary_naics: {"code": ..., "label": ...}."""
-    if _is_na(val):
-        return None
-    if isinstance(val, dict):
-        return val
-    # pandas sometimes leaves nested JSON as a numpy record/other mapping-like
-    try:
-        return dict(val)
-    except (TypeError, ValueError):
-        return None
-
 def normalize_naics(naics): 
 
     if naics is None:

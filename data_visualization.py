@@ -1,5 +1,5 @@
 import pandas as pd
-from utils import normalize_address
+from utils import normalize_address, get_country, parse_nested
 
 def country_distribution(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -28,5 +28,67 @@ def naics_distribution(df: pd.DataFrame) -> pd.DataFrame:
 
     return naics_counts
 
+if __name__ == "__main__":
+    df = pd.read_json("data/companies.jsonl", lines=True)
+    null_naics = df["primary_naics"].isna().sum()
+    print(f"Null primary_naics values: {null_naics}")
+
+    null_naics = df["secondary_naics"].isna().sum()
+    print(f"Null secondary_naics values: {null_naics}")
+
+    completeness = pd.DataFrame({
+    "field": df.columns,
+    "missing": df.isna().sum().values,
+    "missing_pct": (df.isna().mean() * 100).round(2).values,
+    "present": df.notna().sum().values,
+    "present_pct": (df.notna().mean() * 100).round(2).values,
+    })
+
+    completeness = completeness.sort_values(
+        "missing_pct",
+        ascending=False
+    ).reset_index(drop=True)
+
+    print(completeness.to_string(index=False))
+
+    # ------------------------------------------------------------
+    # 1. PRIMARY NAICS DISTRIBUTION
+    # ------------------------------------------------------------
+
+    def get_naics(value):
+        value = parse_nested(value)
+
+        if not value:
+            return None
+
+        return value.get("code")
+
+
+    def get_naics_label(value):
+        value = parse_nested(value)
+
+        if not value:
+            return None
+
+        return value.get("label")
+
+
+    naics = pd.DataFrame({
+        "code": df["primary_naics"].apply(get_naics),
+        "label": df["primary_naics"].apply(get_naics_label),
+    })
+
+    naics_distribution = (
+        naics
+        .value_counts(["code", "label"], dropna=False)
+        .reset_index(name="count")
+    )
+
+    naics_distribution["pct"] = (
+        naics_distribution["count"] / len(df) * 100
+    ).round(2)
+
+    print("\nPRIMARY NAICS DISTRIBUTION")
+    print(naics_distribution.to_string(index=False))
 
 
